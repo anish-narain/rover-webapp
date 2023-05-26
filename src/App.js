@@ -35,7 +35,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>This text is printed inside the App component</p>
+      <p>This text is printed inside the App component, do you see</p>
       <div className="input-container">
         <input type="number" value={inputValue} onChange={handleInputChange} />
       </div>

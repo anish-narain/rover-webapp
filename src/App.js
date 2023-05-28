@@ -23,7 +23,7 @@ function App() {
   };
 
   const handleButtonClick = async (direction) => {
-    await fetch("http://18.134.98.192:3001/buttonClick", {
+    await fetch("http://18.134.98.192:3001/buttonClickPost", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

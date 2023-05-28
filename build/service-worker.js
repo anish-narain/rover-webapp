@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/rover-webapp/precache-manifest.25057373007debe58a7eeae2c169ae1f.js"
+  "/rover-webapp/precache-manifest.9f754fbb93ffa141dca1103f68739be1.js"
 );
 
 workbox.clientsClaim();

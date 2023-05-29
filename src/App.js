@@ -34,13 +34,13 @@ function App() {
     return data;
   };
 
-  const handleMvmtClick = async (coordinates) => {
-    await fetch('http://18.134.98.192:3001/roverCoordinatePost', {
+  const handleMvmtClick = async (direction) => {
+    await fetch('http://18.134.98.192:3001/mvmtClickPost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ coordinates }),
+      body: JSON.stringify({ direction }),
     });
     // Handle the response from the server if needed
   };

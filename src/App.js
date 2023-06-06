@@ -15,7 +15,7 @@ function App() {
       .catch((error) => {
         console.log("Error fetching coordinates:", error);
       });
-  
+
     fetch('http://18.134.98.192:3001/setManualMode', {
       method: 'POST',
       headers: {
@@ -30,8 +30,6 @@ function App() {
         console.error('Error:', error);
       });
   }, [mode]);
-  
-
 
   const fetchCoordinates = async () => {
     const response = await fetch("http://18.134.98.192:3001/numericalInput");
@@ -39,12 +37,7 @@ function App() {
     return data.coordinates;
   };
 
-  const fetchRoverCoordinates = async () => {
-    const response = await fetch('http://18.134.98.192:3001/roverCoordinates');
-    const data = await response.json();
-    return data;
-  };
-
+  
   const handleMvmtClick = async (direction) => {
     await fetch('http://18.134.98.192:3001/mvmtClickPost', {
       method: 'POST',
@@ -60,6 +53,7 @@ function App() {
     setMode(manualMode ? 'automatic' : 'manual');
     setManualMode(!manualMode);
   };
+
   const combinedCoordinates = coordinates.map((coordinate) => ({
     x: coordinate.x,
     y: coordinate.y,
@@ -81,27 +75,35 @@ function App() {
         ))}
       </div>
       <div className="button-container">
+      {manualMode && (
+        <div className="button-row" style={{ marginTop: "10px" }} >
+          <button onClick={() => handleMvmtClick("Up")} className="button">
+            Up
+          </button>
+        </div>
+      )}
+      {manualMode && (
+        <div className="button-row" style={{ marginLeft: "10px"  }}>
+          <button onClick={() => handleMvmtClick("Left")} className="button">
+            Left
+          </button>
+          <button onClick={() => handleMvmtClick("Stop")} className="button"  >
+            Stop
+          </button>
+          <button onClick={() => handleMvmtClick("Right")} className="button" style={{ marginTop: "10px" }}>
+            Right
+          </button>
+        </div>
+        )}
         {manualMode && (
-          <>
-            <button onClick={() => handleMvmtClick("Up")} className="button">
-              Up
-            </button>
-            <button onClick={() => handleMvmtClick("Down")} className="button">
-              Down
-            </button>
-            <button onClick={() => handleMvmtClick("Left")} className="button">
-              Left
-            </button>
-            <button onClick={() => handleMvmtClick("Right")} className="button">
-              Right
-            </button>
-            <button onClick={() => handleMvmtClick("Stop")} className="button">
-              Stop
-            </button>
-          </>
+        <div className="button-row">
+          <button onClick={() => handleMvmtClick("Down")} className="button" style={{ marginTop: "10px" }}>
+            Down
+          </button>
+        </div>
         )}
       </div>
-      <div className="mode-container">
+      <div className="mode-container"> 
         <button onClick={handleModeChange} style={{ marginTop: "20px" }}>
           {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
         </button>
@@ -126,7 +128,3 @@ function App() {
 }
 
 export default App;
-
-
-
-

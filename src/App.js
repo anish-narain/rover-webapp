@@ -47,6 +47,9 @@ function App() {
       body: JSON.stringify({ direction }),
     });
     // Handle the response from the server if needed
+
+    // Auto-refresh the page after the movement click
+    window.location.reload();
   };
 
   const handleModeChange = () => {

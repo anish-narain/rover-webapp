@@ -78,14 +78,14 @@ function App() {
         ))}
       </div>
       <div className="button-container">
-      {manualMode && (
+      {
         <div className="button-row" style={{ marginTop: "10px" }} >
           <button onClick={() => handleMvmtClick("Up")} className="button">
             Up
           </button>
         </div>
-      )}
-      {manualMode && (
+      }
+      {
         <div className="button-row" style={{ marginLeft: "10px"  }}>
           <button onClick={() => handleMvmtClick("Left")} className="button">
             Left
@@ -97,14 +97,14 @@ function App() {
             Right
           </button>
         </div>
-        )}
-        {manualMode && (
+        }
+        {
         <div className="button-row">
           <button onClick={() => handleMvmtClick("Down")} className="button" style={{ marginTop: "10px" }}>
             Down
           </button>
         </div>
-        )}
+        }
       </div>
       <div className="mode-container"> 
         <button onClick={handleModeChange} style={{ marginTop: "20px" }}>

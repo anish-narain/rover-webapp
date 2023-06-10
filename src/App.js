@@ -8,13 +8,32 @@ function App() {
   const [mode, setMode] = useState('manual');
 
   useEffect(() => {
-    fetchCoordinates()
-      .then((data) => {
-        setCoordinates(data);
-      })
-      .catch((error) => {
+    let interval;
+
+    const fetchCoordinates = async () => {
+      try {
+        const response = await fetch("http://18.134.98.192:3001/numericalInput");
+        const data = await response.json();
+        console.log("coordinates: ", data.coordinates);
+        setCoordinates(data.coordinates);
+      } catch (error) {
         console.log("Error fetching coordinates:", error);
-      });
+      }
+    };
+
+    const fetchData = () => {
+      fetchCoordinates();
+    };
+
+    const startInterval = () => {
+      interval = setInterval(fetchData, 1000); // Fetch coordinates every second
+    };
+
+    const stopInterval = () => {
+      clearInterval(interval);
+    };
+
+    fetchData();
 
     fetch('http://18.134.98.192:3001/setManualMode', {
       method: 'POST',
@@ -29,15 +48,14 @@ function App() {
       .catch((error) => {
         console.error('Error:', error);
       });
+
+    startInterval();
+
+    return () => {
+      stopInterval();
+    };
   }, [mode]);
 
-  const fetchCoordinates = async () => {
-    const response = await fetch("http://18.134.98.192:3001/numericalInput");
-    const data = await response.json();
-    return data.coordinates;
-  };
-
-  
   const handleMvmtClick = async (direction) => {
     await fetch('http://18.134.98.192:3001/mvmtClickPost', {
       method: 'POST',
@@ -49,7 +67,9 @@ function App() {
     // Handle the response from the server if needed
 
     // Auto-refresh the page after the movement click
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const handleModeChange = () => {
@@ -78,14 +98,11 @@ function App() {
         ))}
       </div>
       <div className="button-container">
-      {
         <div className="button-row" style={{ marginTop: "10px" }} >
           <button onClick={() => handleMvmtClick("Up")} className="button">
             Up
           </button>
         </div>
-      }
-      {
         <div className="button-row" style={{ marginLeft: "10px"  }}>
           <button onClick={() => handleMvmtClick("Left")} className="button">
             Left
@@ -97,14 +114,11 @@ function App() {
             Right
           </button>
         </div>
-        }
-        {
         <div className="button-row">
           <button onClick={() => handleMvmtClick("Down")} className="button" style={{ marginTop: "10px" }}>
             Down
           </button>
         </div>
-        }
       </div>
       <div className="mode-container"> 
         <button onClick={handleModeChange} style={{ marginTop: "20px" }}>
@@ -123,7 +137,15 @@ function App() {
               name: "Coordinate System 2",
             },
           ]}
-          layout={{ width: 800, height: 400, title: "Combined Coordinate System" }}
+          layout={{ width: 800, height: 400, title: "Combined Coordinate System",
+            xaxis: {
+            scaleanchor: "y",
+            scaleratio: 1,
+          },
+          yaxis: {
+            scaleanchor: "x",
+            scaleratio: 1,
+          },}}
         />
       </div>
     </div>

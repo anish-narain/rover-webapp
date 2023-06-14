@@ -73,7 +73,7 @@ function App() {
   };
 
   const handleRecalibrateClick = () => {
-    fetch('http://18.134.98.192:3001/recalibrate', {
+    fetch('http://18.134.98.192:3001/recalibratePost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

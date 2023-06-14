@@ -6,6 +6,7 @@ function App() {
   const [coordinates, setCoordinates] = useState([]);
   const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
   const [mode, setMode] = useState('manual');
+  //const [new_recalibrate, setRecalibrate] = useState("false"); // Initialize as boolean
 
   useEffect(() => {
     let interval;
@@ -71,13 +72,14 @@ function App() {
       window.location.reload();
     }, 1000);
   };
-
-  const handleRecalibrateClick = () => {
+  
+  const sendRecalibrateStatus = (status) => {
     fetch('http://18.134.98.192:3001/recalibratePost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ new_recalibrate: status }),
     })
       .then((response) => {
         // Handle the response from the server if needed
@@ -86,7 +88,20 @@ function App() {
         console.error('Error:', error);
       });
   };
-
+  
+  const handleRecalibrateClick = () => {
+    sendRecalibrateStatus('true');
+  };
+  
+  // Call sendRecalibrateStatus with 'true' initially
+  sendRecalibrateStatus('true');
+  
+  // Call sendRecalibrateStatus with 'false' every 1 second to reset the recalibrate status
+  setInterval(() => {
+    sendRecalibrateStatus('false');
+  }, 1000);
+  
+  
   const handleModeChange = () => {
     setMode(manualMode ? 'automatic' : 'manual');
     setManualMode(!manualMode);

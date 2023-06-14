@@ -72,6 +72,21 @@ function App() {
     }, 1000);
   };
 
+  const handleRecalibrateClick = () => {
+    fetch('http://18.134.98.192:3001/recalibrate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        // Handle the response from the server if needed
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
   const handleModeChange = () => {
     setMode(manualMode ? 'automatic' : 'manual');
     setManualMode(!manualMode);
@@ -125,6 +140,11 @@ function App() {
           {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
         </button>
       </div>
+      <div className="button-row">
+        <button onClick={handleRecalibrateClick} style={{ marginTop: "20px" }}>
+          Recalibrate
+        </button>
+      </div>
       <div>
         <Plot
           data={[
@@ -137,15 +157,19 @@ function App() {
               name: "Coordinate System 2",
             },
           ]}
-          layout={{ width: 800, height: 400, title: "Combined Coordinate System",
+          layout={{
+            width: 800,
+            height: 400,
+            title: "Combined Coordinate System",
             xaxis: {
-            scaleanchor: "y",
-            scaleratio: 1,
-          },
-          yaxis: {
-            scaleanchor: "x",
-            scaleratio: 1,
-          },}}
+              scaleanchor: "y",
+              scaleratio: 1,
+            },
+            yaxis: {
+              scaleanchor: "x",
+              scaleratio: 1,
+            },
+          }}
         />
       </div>
     </div>

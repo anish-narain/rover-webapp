@@ -88,17 +88,43 @@ function App() {
         console.error('Error:', error);
       });
   };
+
+  const sendStopLeftStatus = (status) => {
+    fetch('http://18.134.98.192:3001/stopleftPost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ new_stopleft: status }),
+    })
+      .then((response) => {
+        // Handle the response from the server if needed
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
   
   const handleRecalibrateClick = () => {
     sendRecalibrateStatus('true');
   };
+
+    const handleStopLeftClick = () => {
+    sendStopLeftStatus('true');
+  };
   
   // Call sendRecalibrateStatus with 'true' initially
   sendRecalibrateStatus('true');
+
+  sendStopLeftStatus('true');
   
   // Call sendRecalibrateStatus with 'false' every 1 second to reset the recalibrate status
   setInterval(() => {
     sendRecalibrateStatus('false');
+  }, 1000);
+
+    setInterval(() => {
+    sendStopLeftStatus('false');
   }, 1000);
   
   
@@ -158,6 +184,11 @@ function App() {
       <div className="button-row">
         <button onClick={handleRecalibrateClick} style={{ marginTop: "20px" }}>
           Recalibrate
+        </button>
+        </div>
+      <div className="button-row">
+        <button onClick={handleStopLeftClick} style={{ marginTop: "20px" }}>
+          StopLeft
         </button>
       </div>
       <div>

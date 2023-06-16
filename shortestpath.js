@@ -1,210 +1,168 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import Plot from 'react-plotly.js';
+// Import the Plotly.js library
 
-function App() {
-  const [coordinates, setCoordinates] = useState([]);
-  const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
-  const [mode, setMode] = useState('manual');
+// The function to find the shortest path
+function findShortestPath(coordinates, start, end) {
+  // Create a dictionary to store the distance from the start to each coordinate
+  const distances = {};
+  distances[start] = 0;
 
-  useEffect(() => {
-    let interval;
+  // Create a dictionary to store the previous coordinate in the shortest path
+  const previous = {};
 
-    const fetchCoordinates = async () => {
-      try {
-        const response = await fetch("http://18.134.98.192:3001/numericalInput");
-        const data = await response.json();
-        console.log("coordinates: ", data.coordinates);
-        setCoordinates(data.coordinates);
-      } catch (error) {
-        console.log("Error fetching coordinates:", error);
-      }
-    };
+  // Create a set to keep track of visited coordinates
+  const visited = new Set();
 
-    const fetchData = () => {
-      fetchCoordinates();
-    };
+  // Create a priority queue to store coordinates and their distances
+  const queue = new PriorityQueue();
 
-    const startInterval = () => {
-      interval = setInterval(fetchData, 1000); // Fetch coordinates every second
-    };
+  // Initialize the priority queue with the start coordinate
+  queue.enqueue(start, 0);
 
-    const stopInterval = () => {
-      clearInterval(interval);
-    };
+  while (!queue.isEmpty()) {
+    // Get the coordinate with the smallest distance from the priority queue
+    const current = queue.dequeue();
 
-    fetchData();
-
-    fetch('http://18.134.98.192:3001/setManualMode', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ mode }),
-    })
-      .then((response) => {
-        // Handle the response from the server if needed
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
-    startInterval();
-
-    return () => {
-      stopInterval();
-    };
-  }, [mode]);
-
-  function calculateDistance(coord1, coord2) {
-    return Math.sqrt((coord2[0] - coord1[0]) ** 2 + (coord2[1] - coord1[1]) ** 2);
-  }
-
-  function findShortestPath(coordinates, startPoint, endPoint) {
-    let shortestPath = [];
-    let shortestDistance = Infinity;
-
-    const startDistance = calculateDistance(startPoint, coordinates[0]);
-    const endDistance = calculateDistance(coordinates[coordinates.length - 1], endPoint);
-
-    if (startDistance < shortestDistance) {
-      shortestDistance = startDistance;
-      shortestPath = [startPoint, coordinates[0]];
+    // If we have reached the end coordinate, reconstruct and return the path
+    if (current === end) {
+      return reconstructPath(previous, end);
     }
 
-    if (endDistance < shortestDistance) {
-      shortestDistance = endDistance;
-      shortestPath = [coordinates[coordinates.length - 1], endPoint];
-    }
+    // Mark the current coordinate as visited
+    visited.add(current);
 
-    for (let i = 0; i < coordinates.length - 1; i++) {
-      const currentCoord = coordinates[i];
-      const nextCoord = coordinates[i + 1];
-      const distance = calculateDistance(currentCoord, nextCoord);
+    // Get the neighboring coordinates of the current coordinate
+    const neighbors = getNeighbors(coordinates, current);
 
-      if (distance < shortestDistance) {
-        shortestDistance = distance;
-        shortestPath = [currentCoord, nextCoord];
+    for (const neighbor of neighbors) {
+      // Calculate the distance from the start to the neighbor coordinate
+      const distance = distances[current] + 1;
+
+      // If the neighbor coordinate has not been visited or
+      // the new distance is smaller than the previously recorded distance
+      if (!visited.has(neighbor) && (!distances[neighbor] || distance < distances[neighbor])) {
+        // Update the distance and previous coordinate
+        distances[neighbor] = distance;
+        previous[neighbor] = current;
+
+        // Enqueue the neighbor coordinate with its distance
+        queue.enqueue(neighbor, distance);
       }
     }
-
-    if (startPoint && shortestPath[0] !== startPoint) {
-      shortestPath.unshift(startPoint);
-    }
-
-    if (endPoint && shortestPath[shortestPath.length - 1] !== endPoint) {
-      shortestPath.push(endPoint);
-    }
-
-    return shortestPath;
   }
 
-  const startPoint = [0, 0];
-  const endPoint = [10, 10];
-
-  const shortestPath = findShortestPath(coordinates, startPoint, endPoint);
-
-  const handleMvmtClick = async (direction) => {
-    await fetch('http://18.134.98.192:3001/mvmtClickPost', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ direction }),
-    });
-    // Handle the response from the server if needed
-
-    // Auto-refresh the page after the movement click
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  };
-
-  const handleModeChange = () => {
-    setMode(manualMode ? 'automatic' : 'manual');
-    setManualMode(!manualMode);
-  };
-
-  const combinedCoordinates = coordinates.map((coordinate) => [coordinate.x, coordinate.y]);
-
-
-  return (
-    <div className="App">
-      <h1 className="title">EE Maze Mapper!</h1>
-      <div className="coordinate-container">
-        {/* Origin */}
-        <div className="origin"></div>
-        {/* Coordinates */}
-        {coordinates.map((coordinate, index) => (
-          <div
-            key={index}
-            className="coordinate-dot"
-            style={{ left: coordinate.x, top: coordinate.y }}
-          ></div>
-        ))}
-      </div>
-      <div className="button-container">
-        <div className="button-row" style={{ marginTop: "10px" }} >
-          <button onClick={() => handleMvmtClick("Up")} className="button">
-            Up
-          </button>
-        </div>
-        <div className="button-row" style={{ marginLeft: "10px"  }}>
-          <button onClick={() => handleMvmtClick("Left")} className="button">
-            Left
-          </button>
-          <button onClick={() => handleMvmtClick("Stop")} className="button"  >
-            Stop
-          </button>
-          <button onClick={() => handleMvmtClick("Right")} className="button" style={{ marginTop: "10px" }}>
-            Right
-          </button>
-        </div>
-        <div className="button-row">
-          <button onClick={() => handleMvmtClick("Down")} className="button" style={{ marginTop: "10px" }}>
-            Down
-          </button>
-        </div>
-      </div>
-      <div className="mode-container"> 
-        <button onClick={handleModeChange} style={{ marginTop: "20px" }}>
-          {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
-        </button>
-      </div>
-      <div>
-        <Plot
-          data={[
-            {
-              x: combinedCoordinates.map((coordinate) => coordinate.x),
-              y: combinedCoordinates.map((coordinate) => coordinate.y),
-              type: "scatter",
-              mode: "markers",
-              marker: { color: "blue" },
-              name: "Coordinate System 2",
-            },
-            {
-              x: shortestPath.map((coordinate) => coordinate[0]),
-              y: shortestPath.map((coordinate) => coordinate[1]),
-              type: "scatter",
-              mode: "lines",
-              line: { color: "red" },
-              name: "Shortest Path",
-            },
-          ]}
-          layout={{ width: 800, height: 400, title: "Combined Coordinate System",
-            xaxis: {
-              scaleanchor: "y",
-              scaleratio: 1,
-            },
-            yaxis: {
-              scaleanchor: "x",
-              scaleratio: 1,
-            },
-          }}
-        />
-      </div>
-    </div>
-  );
+  // If no path is found, return null
+  return null;
 }
 
-export default App;
+// Helper function to get the neighboring coordinates
+function getNeighbors(coordinates, current) {
+  const [x, y] = current;
+  const neighbors = [];
+
+  for (const coordinate of coordinates) {
+    const [neighborX, neighborY] = coordinate;
+
+    // Check if the coordinate is adjacent to the current coordinate
+    if (
+      (Math.abs(neighborX - x) === 1 && neighborY === y) ||
+      (Math.abs(neighborY - y) === 1 && neighborX === x)
+    ) {
+      neighbors.push(coordinate);
+    }
+  }
+
+  return neighbors;
+}
+
+// Helper function to reconstruct the shortest path
+function reconstructPath(previous, end) {
+  const path = [];
+  let current = end;
+
+  while (current !== undefined) {
+    path.unshift(current);
+    current = previous[current];
+  }
+
+  return path;
+}
+
+// Priority queue implementation using a binary heap
+class PriorityQueue {
+  constructor() {
+    this.elements = [];
+  }
+
+  isEmpty() {
+    return this.elements.length === 0;
+  }
+
+  enqueue(element, priority) {
+    const item = { element, priority };
+    let added = false;
+
+    for (let i = 0; i < this.elements.length; i++) {
+      if (priority < this.elements[i].priority) {
+        this.elements.splice(i, 0, item);
+        added = true;
+        break;
+      }
+    }
+
+    if (!added) {
+      this.elements.push(item);
+    }
+  }
+
+  dequeue() {
+    return this.elements.shift().element;
+  }
+}
+
+// Function to visualize the coordinates and shortest path
+function visualizeShortestPath(coordinates, shortestPath) {
+  const xCoordinates = coordinates.map(coord => coord[0]);
+  const yCoordinates = coordinates.map(coord => coord[1]);
+
+  const data = [
+    {
+      x: xCoordinates,
+      y: yCoordinates,
+      mode: 'markers',
+      marker: { size: 12, color: 'blue' },
+      name: 'Coordinates'
+    },
+    {
+      x: shortestPath.map(coord => coord[0]),
+      y: shortestPath.map(coord => coord[1]),
+      mode: 'lines',
+      line: { color: 'red', width: 2 },
+      name: 'Shortest Path'
+    }
+  ];
+
+  const layout = {
+    title: 'Shortest Path Visualization',
+    xaxis: { title: 'X Coordinate' },
+    yaxis: { title: 'Y Coordinate' },
+    hovermode: 'closest'
+  };
+
+  Plotly.newPlot('graph', data, layout);
+}
+
+// Example usage
+const coordinates = [
+  [0, 0], [1, 0], [2, 0], [3, 0], [3, 1], [3, 2], [2, 2], [1, 2], [1, 1], [2, 1]
+];
+
+const start = [0, 0];
+const end = [2, 2];
+
+const shortestPath = findShortestPath(coordinates, start, end);
+
+if (shortestPath !== null) {
+  visualizeShortestPath(coordinates, shortestPath);
+} else {
+  console.log('No path found');
+}

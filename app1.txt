@@ -114,9 +114,9 @@ function App() {
   };
   
   // Call sendRecalibrateStatus with 'true' initially
-  //sendRecalibrateStatus('true');
+  sendRecalibrateStatus('true');
 
- //sendStopLeftStatus('true');
+  sendStopLeftStatus('true');
   
   // Call sendRecalibrateStatus with 'false' every 1 second to reset the recalibrate status
   setInterval(() => {

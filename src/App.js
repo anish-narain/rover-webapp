@@ -4,6 +4,7 @@ import Plot from 'react-plotly.js';
 
 function App() {
   const [coordinates, setCoordinates] = useState([]);
+  const [recalibrate_output, setrecalibrateOutput] = useState([]);
   const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
   const [mode, setMode] = useState('manual');
   //const [new_recalibrate, setRecalibrate] = useState("false"); // Initialize as boolean
@@ -22,12 +23,24 @@ function App() {
       }
     };
 
+    const fetchrecalibrateOutput = async () => {
+      try {
+        const response = await fetch("http://18.134.98.192:3001/recalibrateOutput");
+        const data = await response.json();
+        console.log("recalibrateOutput: ", data.recalibrate_output);
+        setrecalibrateOutput(data.recalibrate_output);
+      } catch (error) {
+        console.log("Error fetching recalibrateOutput:", error);
+      }
+    };
+
     const fetchData = () => {
       fetchCoordinates();
+      fetchrecalibrateOutput();
     };
 
     const startInterval = () => {
-      interval = setInterval(fetchData, 1000); // Fetch coordinates every second
+      interval = setInterval(fetchData, 1000); // Fetch coordinates and recalibrate output every second
     };
 
     const stopInterval = () => {
@@ -151,11 +164,14 @@ function App() {
         <button onClick={() => sendRecalibrateStatus("true")} style={{ marginTop: "20px" }}>
           Recalibrate
         </button>
-        </div>
+      </div>
       <div className="button-row">
         <button onClick={() => sendStopLeftStatus("true")} style={{ marginTop: "20px" }}>
           StopLeft
         </button>
+      </div>
+      <div className="recalibrate-output">
+        Recalibrate Output: {recalibrate_output}
       </div>
       <div>
         <Plot

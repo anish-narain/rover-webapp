@@ -7,7 +7,7 @@ function App() {
   const [recalibrate_output, setrecalibrateOutput] = useState([]);
   const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
   const [mode, setMode] = useState('manual');
-  //const [new_recalibrate, setRecalibrate] = useState("false"); // Initialize as boolean
+  const [new_recalibrate, setNewRecalibrate] = useState(''); // Declare new_recalibrate state variable
 
   useEffect(() => {
     let interval;
@@ -85,15 +85,17 @@ function App() {
       window.location.reload();
     }, 1000);
   };
-  
-  const sendRecalibrateStatus = async(new_recalibrate) => {
+ 
+
+  const sendRecalibrateStatus = async (new_recalibrate) => {
     await fetch('http://18.134.98.192:3001/recalibratePost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ new_recalibrate}),
-    })
+      body: JSON.stringify({ new_recalibrate }),
+    });
+    setNewRecalibrate(new_recalibrate); // Update new_recalibrate state
   };
 
   const sendStopLeftStatus = async(new_stopleft) => {
@@ -172,6 +174,9 @@ function App() {
       </div>
       <div className="recalibrate-output">
         Recalibrate Output: {recalibrate_output}
+      </div>
+      <div className="new-recalibrate">
+        New Recalibrate: {new_recalibrate}
       </div>
       <div>
         <Plot

@@ -119,94 +119,112 @@ function App() {
     y: coordinate.y,
   }));
 
-  return (
-    <div className="App">
-      <h1 className="title">EE Maze Mapper!</h1>
-      <div className="coordinate-container">
-        {/* Origin */}
-        <div className="origin"></div>
-        {/* Coordinates */}
-        {coordinates.map((coordinate, index) => (
-          <div
-            key={index}
-            className="coordinate-dot"
-            style={{ left: coordinate.x, top: coordinate.y }}
-          ></div>
-        ))}
-      </div>
-      <div className="button-container">
-        <div className="button-row" style={{ marginTop: "10px" }} >
-          <button onClick={() => handleMvmtClick("Up")} className="button">
-            Up
-          </button>
+    return (
+      <div className="App">
+        <h1 className="title">EE Maze Mapper!</h1>
+        <div className="button-container">
+          <div className="coordinate-container">
+            {/* Origin */}
+            <div className="origin"></div>
+            {/* Coordinates */}
+            {coordinates.map((coordinate, index) => (
+              <div
+                key={index}
+                className="coordinate-dot"
+                style={{ left: coordinate.x, top: coordinate.y }}
+              ></div>
+            ))}
+          </div>
+          <div style={{ marginLeft: "10px" }}>
+            <div className="button-row" style={{ marginTop: "10px" }}>
+              <button onClick={() => handleMvmtClick("Up")} className="button">
+                Up
+              </button>
+            </div>
+            <div className="button-row">
+              <button onClick={() => handleMvmtClick("Left")} className="button">
+                Left
+              </button>
+              <button onClick={() => handleMvmtClick("Stop")} className="button">
+                Stop
+              </button>
+              <button
+                onClick={() => handleMvmtClick("Right")}
+                className="button"
+                style={{ marginTop: "10px" }}
+              >
+                Right
+              </button>
+            </div>
+            <div className="button-row">
+              <button
+                onClick={() => handleMvmtClick("Down")}
+                className="button"
+                style={{ marginTop: "10px" }}
+              >
+                Down
+              </button>
+            </div>
+            <div className="mode-container">
+              <button onClick={handleModeChange} style={{ marginTop: "20px" }}>
+                {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
+              </button>
+            </div>
+            <div className="button-row">
+              <button
+                onClick={() => sendRecalibrateStatus("true")}
+                style={{ marginTop: "20px" }}
+              >
+                Recalibrate
+              </button>
+            </div>
+            <div className="button-row">
+              <button
+                onClick={() => sendStopLeftStatus("true")}
+                style={{ marginTop: "20px" }}
+              >
+                StopLeft
+              </button>
+            </div>
+            <div className="recalibrate-output" style={{ marginTop: "20px" }}>
+              Recalibrate Output: {recalibrate_output}
+            </div>
+            <div className="new-recalibrate" style={{ marginTop: "20px" }}>
+              New Recalibrate: {new_recalibrate}
+            </div>
+          </div>
         </div>
-        <div className="button-row" style={{ marginLeft: "10px"  }}>
-          <button onClick={() => handleMvmtClick("Left")} className="button">
-            Left
-          </button>
-          <button onClick={() => handleMvmtClick("Stop")} className="button"  >
-            Stop
-          </button>
-          <button onClick={() => handleMvmtClick("Right")} className="button" style={{ marginTop: "10px" }}>
-            Right
-          </button>
+        <div style={{ marginTop: "20px" }}>
+          <Plot
+            data={[
+              {
+                x: combinedCoordinates.map((coordinate) => coordinate.x),
+                y: combinedCoordinates.map((coordinate) => coordinate.y),
+                type: "scatter",
+                mode: "markers",
+                marker: { color: "blue" },
+                name: "Coordinate System 2",
+              },
+            ]}
+            layout={{
+              width: 800,
+              height: 400,
+              title: "Combined Coordinate System",
+              xaxis: {
+                scaleanchor: "y",
+                scaleratio: 1,
+              },
+              yaxis: {
+                scaleanchor: "x",
+                scaleratio: 1,
+              },
+            }}
+          />
         </div>
-        <div className="button-row">
-          <button onClick={() => handleMvmtClick("Down")} className="button" style={{ marginTop: "10px" }}>
-            Down
-          </button>
-        </div>
       </div>
-      <div className="mode-container"> 
-        <button onClick={handleModeChange} style={{ marginTop: "20px" }}>
-          {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
-        </button>
-      </div>
-      <div className="button-row">
-        <button onClick={() => sendRecalibrateStatus("true")} style={{ marginTop: "20px" }}>
-          Recalibrate
-        </button>
-      </div>
-      <div className="button-row">
-        <button onClick={() => sendStopLeftStatus("true")} style={{ marginTop: "20px" }}>
-          StopLeft
-        </button>
-      </div>
-      <div className="recalibrate-output">
-        Recalibrate Output: {recalibrate_output}
-      </div>
-      <div className="new-recalibrate">
-        New Recalibrate: {new_recalibrate}
-      </div>
-      <div>
-        <Plot
-          data={[
-            {
-              x: combinedCoordinates.map((coordinate) => coordinate.x),
-              y: combinedCoordinates.map((coordinate) => coordinate.y),
-              type: "scatter",
-              mode: "markers",
-              marker: { color: "blue" },
-              name: "Coordinate System 2",
-            },
-          ]}
-          layout={{
-            width: 800,
-            height: 400,
-            title: "Combined Coordinate System",
-            xaxis: {
-              scaleanchor: "y",
-              scaleratio: 1,
-            },
-            yaxis: {
-              scaleanchor: "x",
-              scaleratio: 1,
-            },
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
+    );
+  }
+    
+  
+  
 export default App;

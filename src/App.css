@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Andale+Mono&display=swap');
+
 .App {
   text-align: center;
   background-image: url("background5.jpeg");
@@ -11,6 +13,7 @@
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Andale Mono', monospace;
 }
 
 /* Rest of your CSS code */
@@ -46,10 +49,15 @@
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  font-family: 'Andale Mono', monospace;
+}
+
+.button-container button:active {
+  background-color: darkgrey; /* Set the background color to dark grey when pressed */
 }
 
 .box {
-  background-color: rgba(0, 0, 0, 0.5); /* Set the background color with opacity */
+  background-color: rgba(0, 0, 0, 0.7); /* Set the background color with opacity */
   padding: 10px; /* Add some padding for spacing */
   margin-bottom: 10px; /* Add margin-bottom for spacing between boxes */
 }
@@ -70,11 +78,16 @@
 .title {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 10px; /* Add margin-top to move the logo down */
   margin-bottom: 10px;
 }
 
 .logo {
   width: 400px;
+}
+
+.logo.shifted {
+  margin-left: 30px; /* Adjust the value as needed */
+  width: 500px;
 }

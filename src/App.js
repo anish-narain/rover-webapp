@@ -124,7 +124,7 @@ function App() {
   return (
     <div className="App">
       <div className="title">
-        <img className="logo" src={mazerunnerImage} alt="Maze Runner" />
+        <img className="logo shifted" src={mazerunnerImage} alt="Maze Runner" />
       </div>
       <div className="container">
         <div className="left-column">
@@ -146,7 +146,8 @@ function App() {
               title: "Combined Coordinate System",
               plot_bgcolor: "black", // Set black background color
               paper_bgcolor: "black", // Set black background color for the entire plot area
-              font: { color: "white" }, // Set white text color
+              font: {  family: 'Andale Mono, monospace', // Add the desired font family
+                color: "white" }, // Set white text color
               xaxis: {
                 scaleanchor: "y",
                 scaleratio: 1,

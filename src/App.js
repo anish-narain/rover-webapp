@@ -125,7 +125,9 @@ function App() {
     setNewRecalibrate(new_complete); // Update new_recalibrate state
     
     if (new_complete === "true") {
-      const coordinatesString = updatedCoordinates.map(({ x, y }) => `${x},${y}`).join('\n');
+      const coordinatesString = updatedCoordinates
+        .map(({ x, y }) => `[${x},${y}]`)
+        .join('\n');
       const blob = new Blob([coordinatesString], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

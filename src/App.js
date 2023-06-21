@@ -10,7 +10,7 @@ function App() {
   const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
   const [mode, setMode] = useState('manual');
   const [new_recalibrate, setNewRecalibrate] = useState(''); // Declare new_recalibrate state variable
-
+  
   useEffect(() => {
     let interval;
 
@@ -20,24 +20,6 @@ function App() {
         const data = await response.json();
         console.log("coordinates: ", data.coordinates);
         setCoordinates(data.coordinates);
-    
-        // Convert coordinates to text
-        const text = data.coordinates
-          .map(coordinate => `${coordinate[0]}, ${coordinate[1]}`)
-          .join('\n');
-    
-        // Create a blob from the text
-        const blob = new Blob([text], { type: 'text/plain' });
-    
-        // Create a download link
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'output.txt';
-    
-        // Append the link to the document and trigger the download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
       } catch (error) {
         console.log("Error fetching coordinates:", error);
       }
@@ -117,6 +99,28 @@ function App() {
       body: JSON.stringify({ new_recalibrate }),
     });
     setNewRecalibrate(new_recalibrate); // Update new_recalibrate state
+  };
+
+  const sendBeaconStatus = async (new_beacon) => {
+    await fetch('http://18.134.98.192:3001/beaconPost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ new_beacon }),
+    });
+    setNewRecalibrate(new_beacon); // Update new_recalibrate state
+  };
+
+  const sendCompleteStatus = async (new_complete) => {
+    await fetch('http://18.134.98.192:3001/completePost', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ new_complete }),
+    });
+    setNewRecalibrate(new_complete); // Update new_recalibrate state
   };
 
   const sendStopLeftStatus = async(new_stopleft) => {
@@ -205,6 +209,16 @@ function App() {
               StopLeft
             </button>
           </div>
+          <div className="button-row">
+            <button onClick={() => sendBeaconStatus("true")}>
+              Beacon
+            </button>
+            </div>
+            <div className="button-row">
+            <button onClick={() => sendCompleteStatus("true")}>
+              Complete
+            </button>
+            </div>
         </div>
       </div>
       <div className="box">

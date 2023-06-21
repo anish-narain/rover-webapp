@@ -169,56 +169,64 @@ function App() {
           </div>
         </div>
         <div className="right-column">
-          <div className="button-container">
-            <div className="button-row">
-              <button onClick={() => handleMvmtClick("Up")} className="button">
-                Up
-              </button>
-            </div>
-            <div className="button-row">
-              <button onClick={() => handleMvmtClick("Left")} className="button">
-                Left
-              </button>
-              <button onClick={() => handleMvmtClick("Stop")} className="button">
-                Stop
-              </button>
-              <button
-                onClick={() => handleMvmtClick("Right")}
-                className="button"
-              >
-                Right
-              </button>
-            </div>
-            <div className="button-row">
-              <button onClick={() => handleMvmtClick("Down")} className="button">
-                Down
-              </button>
-            </div>
-            <div className="mode-container">
-              <button onClick={handleModeChange}>
-                {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
-              </button>
-            </div>
-            <div className="button-row">
-              <button onClick={() => sendRecalibrateStatus("true")}>
-                Recalibrate
-              </button>
-            </div>
-            <div className="button-row">
-              <button onClick={() => sendStopLeftStatus("true")}>
-                StopLeft
-              </button>
-            </div>
-            <div className="recalibrate-output">
-              Recalibrate Output: {recalibrate_output}
-            </div>
-            <div className="new-recalibrate">
-              New Recalibrate: {new_recalibrate}
-            </div>
+        <div className="box">
+        <div className="button-container">
+          <div className="button-row">
+            <button onClick={() => sendRecalibrateStatus("true")}>
+              Recalibrate
+            </button>
+          </div>
+          <div className="button-row">
+            <button onClick={() => sendStopLeftStatus("true")}>
+              StopLeft
+            </button>
           </div>
         </div>
       </div>
+      <div className="box">
+        <div className="text-container">
+          <div className="text-line">
+            Recalibrate Output: {recalibrate_output}
+          </div>
+          <div className="text-line">
+            New Recalibrate: {new_recalibrate}
+          </div>
+        </div>
+      </div>
+      <div className="box">
+        <div className="button-container">
+          <div className="button-row">
+            <button onClick={() => handleMvmtClick("Up")} className="button">
+              Up
+            </button>
+          </div>
+          <div className="button-row">
+            <button onClick={() => handleMvmtClick("Left")} className="button">
+              Left
+            </button>
+            <button onClick={() => handleMvmtClick("Stop")} className="button">
+              Stop
+            </button>
+            <button onClick={() => handleMvmtClick("Right")} className="button">
+              Right
+            </button>
+          </div>
+          <div className="button-row">
+            <button onClick={() => handleMvmtClick("Down")} className="button">
+              Down
+            </button>
+          </div>
+          <div className="mode-container">
+            <button onClick={handleModeChange}>
+              {manualMode ? "Switch to Automatic Mode" : "Switch to Manual Mode"}
+            </button>
+          </div>
+        </div>
+      </div>
+      
     </div>
+  </div>
+</div>
   );
   
   }

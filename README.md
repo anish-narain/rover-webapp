@@ -1,1 +1,2 @@
-# rover-webapp
+# Group 2, Rover WebApp
+

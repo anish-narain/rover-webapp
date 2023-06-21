@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Plot from 'react-plotly.js';
 
+import mazerunnerImage from './mazerunner.png'; // Import the image
+
 function App() {
   const [coordinates, setCoordinates] = useState([]);
   const [recalibrate_output, setrecalibrateOutput] = useState([]);
@@ -121,7 +123,9 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="title">EE Maze Mapper!</h1>
+      <div className="title">
+        <img className="logo" src={mazerunnerImage} alt="Maze Runner" />
+      </div>
       <div className="container">
         <div className="left-column">
           <div style={{ marginTop: "20px" }}>

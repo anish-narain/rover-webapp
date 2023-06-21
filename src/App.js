@@ -159,7 +159,7 @@ function App() {
                 y: combinedCoordinates.map((coordinate) => coordinate.y),
                 type: "scatter",
                 mode: "markers",
-                marker: { color: "blue" }, // Set dot color to white
+                marker: { color: "yellow" }, // Set dot color to white
                 name: "Coordinate System 2",
               },
             ]}

@@ -1,4 +1,4 @@
-# Group 2, Rover WebApp
+# Rover WebApp
 
 This repository houses the source code for a web application created for Group 2's 2nd Year EEEBalanceBug Project. The purpose of this web application is to offer an interface that allows users to input the coordinates through which the rover has traversed on the maze. Additionally, it provides buttons that enable users to send signals to the rover.
 

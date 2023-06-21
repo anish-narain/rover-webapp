@@ -6,11 +6,12 @@ import mazerunnerImage from './mazerunner.png'; // Import the image
 
 function App() {
   const [coordinates, setCoordinates] = useState([]);
-  const [recalibrate_output, setrecalibrateOutput] = useState([]);
+  const [recalibrate_output, setRecalibrateOutput] = useState([]);
   const [manualMode, setManualMode] = useState(false); // New state variable for manual mode
   const [mode, setMode] = useState('manual');
   const [new_recalibrate, setNewRecalibrate] = useState(''); // Declare new_recalibrate state variable
-  
+  const [updatedCoordinates, setUpdatedCoordinates] = useState([]); // Array to store updated coordinates
+
   useEffect(() => {
     let interval;
 
@@ -20,18 +21,19 @@ function App() {
         const data = await response.json();
         console.log("coordinates: ", data.coordinates);
         setCoordinates(data.coordinates);
+        setUpdatedCoordinates(data.coordinates); // Update the updatedCoordinates array
       } catch (error) {
         console.log("Error fetching coordinates:", error);
       }
     };
     
 
-    const fetchrecalibrateOutput = async () => {
+    const fetchRecalibrateOutput = async () => {
       try {
         const response = await fetch("http://18.134.98.192:3001/recalibrateOutput");
         const data = await response.json();
         console.log("recalibrateOutput: ", data.recalibrate_output);
-        setrecalibrateOutput(data.recalibrate_output);
+        setRecalibrateOutput(data.recalibrate_output);
       } catch (error) {
         console.log("Error fetching recalibrateOutput:", error);
       }
@@ -39,7 +41,7 @@ function App() {
 
     const fetchData = () => {
       fetchCoordinates();
-      fetchrecalibrateOutput();
+      fetchRecalibrateOutput();
     };
 
     const startInterval = () => {
@@ -121,16 +123,26 @@ function App() {
       body: JSON.stringify({ new_complete }),
     });
     setNewRecalibrate(new_complete); // Update new_recalibrate state
+    
+    if (new_complete === "true") {
+      const coordinatesString = updatedCoordinates.map(({ x, y }) => `${x},${y}`).join('\n');
+      const blob = new Blob([coordinatesString], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'coordinates.txt';
+      link.click();
+    }
   };
 
-  const sendStopLeftStatus = async(new_stopleft) => {
+  const sendStopLeftStatus = async (new_stopleft) => {
     fetch('http://18.134.98.192:3001/stopleftPost', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ new_stopleft}),
-    })
+      body: JSON.stringify({ new_stopleft }),
+    });
   };
   
 
@@ -266,9 +278,6 @@ function App() {
   </div>
 </div>
   );
-  
-  }
-    
-  
-  
+}
+
 export default App;

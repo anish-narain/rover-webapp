@@ -20,10 +20,29 @@ function App() {
         const data = await response.json();
         console.log("coordinates: ", data.coordinates);
         setCoordinates(data.coordinates);
+    
+        // Convert coordinates to text
+        const text = data.coordinates
+          .map(coordinate => `${coordinate[0]}, ${coordinate[1]}`)
+          .join('\n');
+    
+        // Create a blob from the text
+        const blob = new Blob([text], { type: 'text/plain' });
+    
+        // Create a download link
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'output.txt';
+    
+        // Append the link to the document and trigger the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       } catch (error) {
         console.log("Error fetching coordinates:", error);
       }
     };
+    
 
     const fetchrecalibrateOutput = async () => {
       try {
@@ -136,7 +155,7 @@ function App() {
                 y: combinedCoordinates.map((coordinate) => coordinate.y),
                 type: "scatter",
                 mode: "markers",
-                marker: { color: "white" }, // Set dot color to white
+                marker: { color: "blue" }, // Set dot color to white
                 name: "Coordinate System 2",
               },
             ]}

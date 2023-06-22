@@ -81,11 +81,9 @@ rl.on('close', () => {
   ctx.stroke();
 
   // Save the canvas as an image
-  const out = fs.createWriteStream(__dirname + '/path.jpg');
+  const out = fs.createWriteStream(__dirname + '/output.png');
   const stream = canvas.createJPEGStream();
   stream.pipe(out);
-  out.on('finish', () => console.log('Image created: path.jpg'));
-
-  // Use the line coordinates as needed
-  console.log('Line coordinates:', adjustedCoordinates.filter(coordinate => coordinate !== null));
+  out.on('finish', () => console.log('Image created: output.png'));
+  
 });
